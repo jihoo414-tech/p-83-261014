@@ -21,20 +21,20 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @RequiredArgsConstructor
 class SecurityConfig(
     private val customAuthenticationFilter: CustomAuthenticationFilter
-
 ) {
 
     @Bean
     @Throws(Exception::class)
-    fun filterChain(http: HttpSecurity): SecurityFilterChain? {
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
+
         http {
             authorizeHttpRequests {
                 authorize("/favicon.ico", permitAll)
                 authorize("/h2-console/**", permitAll)
                 authorize(HttpMethod.GET, "/api/*/posts", permitAll)
-                authorize(HttpMethod.GET, "/api/*/posts/{id:\\\\d+}", permitAll)
-                authorize(HttpMethod.GET, "/api/*/posts/{postId:\\\\d+}/comments", permitAll)
-                authorize(HttpMethod.GET, "/api/*/posts/{postId:\\\\d+}/comments/{commentId:\\\\d+}", permitAll)
+                authorize(HttpMethod.GET, "/api/*/posts/{id:\\d+}", permitAll)
+                authorize(HttpMethod.GET, "/api/*/posts/{postId:\\d+}/comments", permitAll)
+                authorize(HttpMethod.GET, "/api/*/posts/{postId:\\d+}/comments/{commentId:\\d+}", permitAll)
                 authorize(HttpMethod.POST, "/api/v1/members/login", permitAll)
                 authorize(HttpMethod.POST, "/api/v1/members/join", permitAll)
                 authorize(HttpMethod.DELETE, "/api/v1/members/logout", permitAll)
@@ -43,7 +43,6 @@ class SecurityConfig(
                 authorize(anyRequest, permitAll)
             }
             csrf { disable() }
-
             headers {
                 frameOptions { sameOrigin = true }
             }
@@ -51,7 +50,6 @@ class SecurityConfig(
             sessionManagement {
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
-
 
             exceptionHandling {
                 authenticationEntryPoint = AuthenticationEntryPoint { _, response, _ ->
@@ -103,4 +101,4 @@ class SecurityConfig(
         }
     }
 }
-}
+
